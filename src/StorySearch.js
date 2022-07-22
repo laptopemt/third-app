@@ -1,10 +1,25 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 function StorySearch(props) {
+
+    const updateSearchTerm = props.updateSearchTerm;
+    const [searchTerm, changeTerm] = useState("");
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        updateSearchTerm(searchTerm);
+    };
+
+    const handleChange = (e) => {
+        changeTerm(e.target.value);
+    };
+
     return (
         <div style={{ padding: 10, margin: 10 }}>
-            <label htmlFor="search" style={{ padding: 5}}>Search</label>
-            <input type="text" name="search" placeholder="Type to Search"/>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="search" style={{ padding: 5}}>Search</label>
+                <input type="text" onChange={handleChange} name="search" value={searchTerm} placeholder="Type to Search"/>
+            </form>
         </div>
     );
 }
