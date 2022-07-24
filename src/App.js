@@ -26,7 +26,9 @@ const reducer = (state, action) => {
         case ACTION.FETCH_STORIES_ERROR:
             return {...state, isLoading: false, isError: true}
         case ACTION.DELETE_STORY:
-            return {data: state.data.filter(story => story.objectID === action.payload.storyId), isLoading: false, isError: false}
+            const delStoryID = action.payload.storyId;
+            const filteredStoryList = state.data.filter(story => story.objectID !== delStoryID);
+            return { data: filteredStoryList, isLoading: false, isError: false}
         default:
             return { ...state, isLoading: false, isError: false}
 

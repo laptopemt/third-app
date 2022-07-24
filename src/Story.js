@@ -6,10 +6,12 @@ function Story(props) {
     const reducer = props.reducer;
 
     const handleDelete = () => {
+        reducer({type: ACTION.FETCH_STORIES});
         reducer({
             type:ACTION.DELETE_STORY,
-            payload: {storyId: story.objectId},
+            payload: {storyId: story.objectID},
         });
+
     };
 
     return (
