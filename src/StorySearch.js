@@ -3,11 +3,12 @@ import React, {useState} from 'react';
 function StorySearch(props) {
 
     const updateSearchTerm = props.updateSearchTerm;
-    const [searchTerm, changeTerm] = useState("");
+    const [searchTerm, changeTerm] = useState(props.searchTerm);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         updateSearchTerm(searchTerm);
+        localStorage.setItem('searchTerm', searchTerm);
     };
 
     const handleChange = (e) => {
