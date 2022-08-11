@@ -48,25 +48,35 @@ const reducer = (state, action) => {
 
 }
 
+
 function App() {
 
     const [stories, storyReducer] = useReducer(reducer, {data: [], isLoading: false, isError: false});
-    const [searchTerm, updateSearchTerm] = useState(() => {
-        const savedSearchTerm = localStorage.getItem("searchTerm");
-        return savedSearchTerm || "";
-    });
+    const [searchTerm, updateSearchTerm] = useState( "");
+    const [resultPage, updateResultPage] = useState(1);
 
     useEffect(() => {
         storyReducer({type: ACTION.FETCH_STORIES});
+        const pageUrl = resultPage > 1 ? `&page=${resultPage}` : "";
+        const url = `${CONFIG.API_ENDPOINT}${searchTerm}${pageUrl}`;
 
-        axios.get(`${CONFIG.API_ENDPOINT}${searchTerm}`)
+        axios.get(url)
             .then(result => {
                 storyReducer({ type: ACTION.FETCH_STORIES_SUCCESS, payload: result.data.hits});
             })
             .catch(() => {
                 storyReducer({ type: ACTION.FETCH_STORIES_ERROR});
             })
-    }, [searchTerm]);
+    }, [searchTerm, resultPage]);
+
+    const minusPage = () => updateResultPage(currPage => {
+        if(currPage <= 1)
+        {
+            return 1;
+        }
+        return currPage - 1
+    } );
+    const addPage = () => updateResultPage( currPage => currPage + 1 );
 
   return (
     <div>
@@ -76,6 +86,11 @@ function App() {
         <Sort reducer={storyReducer} />
         <div style={{padding: 10, margin: 10}}>
             <StoryList stories={stories} reducer={storyReducer} />
+        </div>
+        <div>
+            <button onClick={minusPage}>Previous</button>
+            <p>Page {resultPage}</p>
+            <button onClick={addPage}>Next</button>
         </div>
     </div>
   );
